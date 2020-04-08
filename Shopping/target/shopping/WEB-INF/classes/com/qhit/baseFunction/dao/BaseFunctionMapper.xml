@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qhit.baseFunction.dao.BaseFunctionMapper">
+  <resultMap id="BaseResultMap" type="com.qhit.baseFunction.pojo.BaseFunction">
+    <id column="fid" jdbcType="INTEGER" property="fid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="target" jdbcType="VARCHAR" property="target"></result>
+  </resultMap>
+  <sql id="Base_Column_List">
+    fid,name, pid, url,target
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from base_function bf
+    where fid = #{fid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from base_function
+    where fid = #{fid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qhit.baseFunction.pojo.BaseFunction">
+    insert into base_function (fid, name, mid,
+      url)
+    values (#{fid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{mid,jdbcType=INTEGER},
+      #{url,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qhit.baseFunction.pojo.BaseFunction">
+    insert into base_function
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fid != null">
+        fid,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="pid != null">
+        pid,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fid != null">
+        #{fid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qhit.baseFunction.pojo.BaseFunction">
+    update base_function
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qhit.baseFunction.pojo.BaseFunction">
+    update base_function
+    set name = #{name,jdbcType=VARCHAR},
+      pid = #{pid,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR}
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+
+  <select id="findAll" resultMap="BaseResultMap">
+    select
+   <include refid="Base_Column_List"></include>
+    from base_function
+  </select>
+<select id="findmodule" resultMap="BaseResultMap">
+
+  select
+  <include refid="Base_Column_List"></include>
+  from base_function where pid=0
+</select>
+
+  <select id="search" parameterType="com.qhit.baseFunction.pojo.BaseFunction" resultMap="BaseResultMap">
+    select * from  base_function
+    <where >
+      <if test="name != null and name!='' " >
+        and name = #{name}
+      </if>
+      <if test="pid != null and pid!='' " >
+        and pid = #{pid}
+      </if>
+      <if test="url != null and url!='' " >
+        and url = #{url}
+      </if>
+    </where>
+  </select>
+  <select id="findFunctionByuid" resultMap="BaseResultMap">
+    SELECT DISTINCT bf.*FROM  base_function bf JOIN base_role_function brf ON bf.`fid`=brf.`fid`
+JOIN base_role br  ON  br.`rid`=brf.`rid` JOIN base_user_role bur ON bur.`rid`=br.`rid`
+ JOIN adminuser au  ON au.`uid` =bur.`uid` AND    au.`uid`=#{uid}
+
+  </select>
+
+
+
+</mapper>

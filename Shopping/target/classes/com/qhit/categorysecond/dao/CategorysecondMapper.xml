@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.categorysecond.dao.ICategorysecondDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.categorysecond.pojo.Categorysecond"> 
+		<id property="csid" column="csid" javaType="java.lang.Integer"></id> 
+		<result property="csname" column="csname" javaType="java.lang.String"></result> 
+		<result property="cid" column="cid" javaType="java.lang.Integer"></result> 
+	</resultMap> 
+ <resultMap id="ResultMap" type="com.qhit.categorysecond.pojo.Categorysecond">
+   <id property="csid" column="csid" javaType="java.lang.Integer"></id>
+	 <result property="csname" column="csname" javaType="java.lang.String"></result>
+	 <result property="cid" column="cid" javaType="java.lang.Integer"></result>
+<association property="category" javaType="com.qhit.category.pojo.Category">
+	<result property="cname" column="cname" javaType="java.lang.String"></result>
+</association>
+ </resultMap>
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		csid,csname,cid 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from categorysecond 
+		where csid = #{csid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from categorysecond 
+		where csid = #{csid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.categorysecond.pojo.Categorysecond" > 
+		insert into categorysecond(csname,cid) 
+		values (#{csname},#{cid}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.categorysecond.pojo.Categorysecond" > 
+		update categorysecond 
+		<set > 
+			<if test="csname != null and csname!='' " > 
+				csname = #{csname}, 
+			</if> 
+			<if test="cid != null and cid!='' " > 
+				cid = #{cid}, 
+			</if> 
+		</set> 
+		where csid = #{csid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.categorysecond.pojo.Categorysecond" > 
+		update categorysecond 
+		set  csname = #{csname}, cid = #{cid} 
+		where csid = #{csid} 
+	</update> 
+	<select id="findAll" resultMap="ResultMap" >
+	SELECT   cs.csid,cs.csname,cs.cid,c.cname
+	 FROM categorysecond cs LEFT JOIN category c ON cs.cid = c.cid
+	</select> 
+	<select id="findByCsname" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from categorysecond 
+		where csname = #{csname} 
+	</select> 
+	<select id="findByCid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from categorysecond 
+		where cid = #{cid} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from categorysecond where csid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.categorysecond.pojo.Categorysecond" resultMap="BaseResultMap"> 
+		select * from  categorysecond 
+		<where > 
+			<if test="csname != null and csname!='' " > 
+				 and csname = #{csname} 
+			</if> 
+			<if test="cid != null and cid!='' " > 
+				 and cid = #{cid} 
+			</if> 
+		</where> 
+	</select> 
+</mapper> 

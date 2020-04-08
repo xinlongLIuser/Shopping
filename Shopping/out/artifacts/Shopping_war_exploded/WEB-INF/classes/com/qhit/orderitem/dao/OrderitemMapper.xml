@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.orderitem.dao.IOrderitemDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.orderitem.pojo.Orderitem"> 
+		<id property="itemid" column="itemid" javaType="java.lang.Integer"></id> 
+		<result property="count" column="count" javaType="java.lang.Integer"></result> 
+		<result property="subtotal" column="subtotal" javaType="java.lang.Double"></result> 
+		<result property="pid" column="pid" javaType="java.lang.Integer"></result> 
+		<result property="oid" column="oid" javaType="java.lang.Integer"></result> 
+	</resultMap>
+	<resultMap id="orderItem" type="com.qhit.orderitem.pojo.Orderitem">
+	<id column="itemid" property="itemid"/>
+	<result column="count" property="count"/>
+	<result column="subtotal" property="subtotal"/>
+	<association property="product" javaType="com.qhit.product.pojo.Product">
+		<id property="pid" column="pid" javaType="java.lang.Integer"></id>
+		<result property="pname" column="pname" javaType="java.lang.String"></result>
+		<result property="marketprice" column="marketprice" javaType="java.lang.Double"></result>
+		<result property="shopprice" column="shopprice" javaType="java.lang.Double"></result>
+		<result property="image" column="image" javaType="java.lang.String"></result>
+		<result property="pdesc" column="pdesc" javaType="java.lang.String"></result>
+		<result property="ishot" column="ishot" javaType="java.lang.Integer"></result>
+		<result property="pdate" column="pdate" javaType="java.lang.String"></result>
+		<result property="csid" column="csid" javaType="java.lang.Integer"></result>
+	</association>
+	<association property="orders" javaType="com.qhit.orders.pojo.Orders">
+		<id property="oid" column="oid"/>
+	</association>
+</resultMap>
+ 
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		itemid,count,subtotal,pid,oid 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from orderitem 
+		where itemid = #{itemid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from orderitem 
+		where itemid = #{itemid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.orderitem.pojo.Orderitem" > 
+		insert into orderitem(count,subtotal,pid,oid) 
+		values (#{count},#{subtotal},#{product.pid},#{orders.oid})
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.orderitem.pojo.Orderitem" > 
+		update orderitem 
+		<set > 
+			<if test="count != null and count!='' " > 
+				count = #{count}, 
+			</if> 
+			<if test="subtotal != null and subtotal!='' " > 
+				subtotal = #{subtotal}, 
+			</if> 
+			<if test="pid != null and pid!='' " > 
+				pid = #{pid}, 
+			</if> 
+			<if test="oid != null and oid!='' " > 
+				oid = #{oid}, 
+			</if> 
+		</set> 
+		where itemid = #{itemid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.orderitem.pojo.Orderitem" > 
+		update orderitem 
+		set  count = #{count}, subtotal = #{subtotal}, pid = #{pid}, oid = #{oid} 
+		where itemid = #{itemid} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from orderitem 
+	</select> 
+	<select id="findByCount" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from orderitem 
+		where count = #{count} 
+	</select> 
+	<select id="findBySubtotal" resultMap="BaseResultMap" parameterType="java.lang.Double" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from orderitem 
+		where subtotal = #{subtotal} 
+	</select> 
+	<select id="findByPid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from orderitem 
+		where pid = #{pid} 
+	</select> 
+	<select id="findByOid" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from orderitem 
+		where oid = #{oid} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from orderitem where itemid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.orderitem.pojo.Orderitem" resultMap="BaseResultMap"> 
+		select * from  orderitem 
+		<where > 
+			<if test="count != null and count!='' " > 
+				 and count = #{count} 
+			</if> 
+			<if test="subtotal != null and subtotal!='' " > 
+				 and subtotal = #{subtotal} 
+			</if> 
+			<if test="pid != null and pid!='' " > 
+				 and pid = #{pid} 
+			</if> 
+			<if test="oid != null and oid!='' " > 
+				 and oid = #{oid} 
+			</if> 
+		</where> 
+	</select>
+
+	<select id="findOrderItemByOid" resultMap="orderItem">
+
+		 select o.itemid,o.count,o.subtotal,
+	     p.pname,p.marketprice,
+	    p.shopprice,
+	    p.image
+	    from
+	    orderitem o,
+	    product p
+	    where
+	    o.pid=p.pid
+	    and  o.oid=#{oids}
+
+	</select>
+</mapper> 

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qhit.basedept.dao.BasedeptMapper">
+  <resultMap id="BaseResultMap" type="com.qhit.basedept.pojo.Basedept">
+    <id column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    dept_id, dept_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from base_dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from base_dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qhit.basedept.pojo.Basedept">
+    insert into base_dept (dept_id, dept_name)
+    values (#{deptId,jdbcType=INTEGER}, #{deptName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qhit.basedept.pojo.Basedept">
+    insert into base_dept
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deptId != null">
+        dept_id,
+      </if>
+      <if test="deptName != null">
+        dept_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deptId != null">
+        #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="deptName != null">
+        #{deptName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qhit.basedept.pojo.Basedept">
+    update base_dept
+    <set>
+      <if test="deptName != null">
+        dept_name = #{deptName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qhit.basedept.pojo.Basedept">
+    update base_dept
+    set dept_name = #{deptName,jdbcType=VARCHAR}
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </update>
+
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from base_dept
+    where dept_id = #{deptId}
+  </select>
+  <select id="findAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from base_dept
+  </select>
+  <select id="findByDeptName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from base_dept
+    where dept_name = #{deptName}
+  </select>
+  <select id="search" parameterType="com.qhit.basedept.pojo.Basedept" resultMap="BaseResultMap">
+    select * from  base_dept
+    <where >
+      <if test="deptName != null and deptName!='' " >
+        and dept_name = #{deptName}
+      </if>
+    </where>
+  </select>
+</mapper>

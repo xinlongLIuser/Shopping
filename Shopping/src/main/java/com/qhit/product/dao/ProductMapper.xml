@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qhit.product.dao.IProductDao">
+    <!-- 自定义结果集 -->
+    <resultMap id="BaseResultMap" type="com.qhit.product.pojo.Product">
+        <id property="pid" column="pid" javaType="java.lang.Integer"></id>
+        <result property="pname" column="pname" javaType="java.lang.String"></result>
+        <result property="marketprice" column="marketprice" javaType="java.lang.Double"></result>
+        <result property="shopprice" column="shopprice" javaType="java.lang.Double"></result>
+        <result property="image" column="image" javaType="java.lang.String"></result>
+        <result property="pdesc" column="pdesc" javaType="java.lang.String"></result>
+        <result property="ishot" column="ishot" javaType="java.lang.Integer"></result>
+        <result property="pdate" column="pdate" javaType="java.lang.String"></result>
+        <result property="csid" column="csid" javaType="java.lang.Integer"></result>
+    </resultMap>
+    <resultMap id="ResultMap" type="com.qhit.product.pojo.Product">
+        <id property="pid" column="pid" javaType="java.lang.Integer"></id>
+        <result property="pname" column="pname" javaType="java.lang.String"></result>
+        <result property="marketprice" column="marketprice" javaType="java.lang.Double"></result>
+        <result property="shopprice" column="shopprice" javaType="java.lang.Double"></result>
+        <result property="image" column="image" javaType="java.lang.String"></result>
+        <result property="pdesc" column="pdesc" javaType="java.lang.String"></result>
+        <result property="ishot" column="ishot" javaType="java.lang.Integer"></result>
+        <result property="pdate" column="pdate" javaType="java.lang.String"></result>
+        <result property="csid" column="csid" javaType="java.lang.Integer"></result>
+        <association property="categorysecond" javaType="com.qhit.categorysecond.pojo.Categorysecond">
+            <result property="csname" column="csname" javaType="java.lang.String"></result>
+        </association>
+    </resultMap>
+
+    <!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型，
+    resultType属性指明查询返回的结果集类型    -->
+
+    <sql id="Base_Column_List">
+		pid,pname,marketprice,shopprice,image,pdesc,ishot,pdate,csid
+	</sql>
+    <sql id="Base_colum_byPlist">
+		p.pid,p.pname,p.marketprice,p.shopprice,p.image,p.pdesc,p.ishot,p.pdate,p.csid
+	</sql>
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where pid = #{pid}
+    </select>
+    <delete id="delete" parameterType="java.lang.Integer">
+		delete from product 
+		where pid = #{pid} 
+	</delete>
+    <insert id="insert" parameterType="com.qhit.product.pojo.Product">
+		insert into product(pname,marketprice,shopprice,image,pdesc,ishot,pdate,csid)
+		values (#{pname},#{marketprice},#{shopprice},#{image},#{pdesc},#{ishot},#{pdate},#{csid})
+	</insert>
+    <update id="updateSelective" parameterType="com.qhit.product.pojo.Product">
+        update product
+        <set>
+            <if test="pname != null and pname!='' ">
+                pname = #{pname},
+            </if>
+            <if test="marketprice != null and marketprice!='' ">
+                marketprice = #{marketprice},
+            </if>
+            <if test="shopprice != null and shopprice!='' ">
+                shopprice = #{shopprice},
+            </if>
+            <if test="image != null and image!='' ">
+                image = #{image},
+            </if>
+            <if test="pdesc != null and pdesc!='' ">
+                pdesc = #{pdesc},
+            </if>
+            <if test="ishot != null and ishot!='' ">
+                ishot = #{ishot},
+            </if>
+            <if test="pdate != null and pdate!='' ">
+                pdate = #{pdate},
+            </if>
+            <if test="csid != null and csid!='' ">
+                csid = #{csid},
+            </if>
+        </set>
+        where pid = #{pid}
+    </update>
+    <update id="update" parameterType="com.qhit.product.pojo.Product">
+		update product 
+		set  pname = #{pname}, marketprice = #{marketprice}, shopprice = #{shopprice}, image = #{image}, pdesc = #{pdesc}, ishot = #{ishot}, pdate = #{pdate}, csid = #{csid}
+		where pid = #{pid} 
+	</update>
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+    </select>
+    <select id="selectAll" resultMap="ResultMap">
+        select
+        <include refid="Base_colum_byPlist"/>,cs.csname
+        from product p JOIN categorysecond cs ON p.csid = cs.csid ORDER BY p.pdate DESC
+    </select>
+    <select id="findByPname" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where pname = #{pname}
+    </select>
+    <select id="findByMarketprice" resultMap="BaseResultMap" parameterType="java.lang.Double">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where marketprice = #{marketprice}
+    </select>
+    <select id="findByShopprice" resultMap="BaseResultMap" parameterType="java.lang.Double">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where shopprice = #{shopprice}
+    </select>
+    <select id="findByImage" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where image = #{image}
+    </select>
+    <select id="findByPdesc" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where pdesc = #{pdesc}
+    </select>
+    <select id="findByIshot" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where ishot = #{ishot}
+    </select>
+    <select id="findByPdate" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where pdate = #{pdate}
+    </select>
+    <select id="findByCsid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where csid = #{csid}
+    </select>
+    <select id="findByMarketPrice" resultMap="BaseResultMap" parameterType="java.lang.Double">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where marketprice = #{marketPrice}
+    </select>
+    <select id="findByShopPrice" resultMap="BaseResultMap" parameterType="java.lang.Double">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where shopprice = #{shopPrice}
+    </select>
+    <select id="findByIsHot" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where ishot = #{isHot}
+    </select>
+    <delete id="deleteBatch" parameterType="java.util.Arrays">
+        delete from product where pid in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="search" parameterType="com.qhit.product.pojo.Product" resultMap="BaseResultMap">
+        select * from product
+        <where>
+            <if test="pname != null and pname!='' ">
+                and pname = #{pname}
+            </if>
+            <if test="marketprice != null and marketprice!='' ">
+                and marketprice = #{marketprice}
+            </if>
+            <if test="shopprice != null and shopprice!='' ">
+                and shopprice = #{shopprice}
+            </if>
+            <if test="image != null and image!='' ">
+                and image = #{image}
+            </if>
+            <if test="pdesc != null and pdesc!='' ">
+                and pdesc = #{pdesc}
+            </if>
+            <if test="ishot != null and ishot!='' ">
+                and ishot = #{ishot}
+            </if>
+            <if test="pdate != null and pdate!='' ">
+                and pdate = #{pdate}
+            </if>
+            <if test="csid != null and csid!='' ">
+                and csid = #{csid}
+            </if>
+        </where>
+    </select>
+    <select id="findHotPorduct" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+
+        from product  where ishot=1 order by pdate desc LIMIT 10
+
+    </select>
+<select id="findNewPorduct" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from product  where ishot=0 order by pdate desc LIMIT 10
+</select>
+    <select id="ProductListbycid" resultMap="BaseResultMap" parameterType="integer">
+      select
+     p.pid,
+     p.pname,
+     p.marketprice,
+     p.shopprice,
+     p.image,
+     p.pdesc,
+     p.pdate,
+     p.csid,
+     p.ishot
+     FROM
+     categorysecond cs JOIN
+     category c
+     JOIN product p
+     ON p.csid=cs.csid
+     and cs.cid=c.cid
+     where c.cid=#{cid}
+
+    </select>
+    <select id="ProductListbycsid" resultMap="BaseResultMap" parameterType="integer">
+        select
+     p.pid,
+     p.pname,
+     p.marketprice,
+     p.shopprice,
+     p.image,
+     p.pdesc,
+     p.pdate,
+     p.csid,
+     p.ishot
+     from product
+     p join categorySecond cs
+     ON p.csid=cs.csid
+     where cs.csid = #{csid}
+    </select>
+</mapper> 

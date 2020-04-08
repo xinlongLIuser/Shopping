@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qhit.baseRole.dao.BaseRoleMapper">
+  <resultMap id="BaseResultMap" type="com.qhit.baseRole.pojo.BaseRole">
+    <id column="rid" jdbcType="INTEGER" property="rid" />
+    <result column="rname" jdbcType="VARCHAR" property="rname" />
+
+  </resultMap>
+
+  <resultMap id="BaseResultMap1" type="com.qhit.baseRole.pojo.BaseRole">
+    <id column="rid" jdbcType="INTEGER" property="rid" />
+    <result column="rname" jdbcType="VARCHAR" property="rname" />
+  </resultMap>
+
+  <!--<resultMap id="distribute" type="com.qhit.baseRole.pojo.BaseRole">-->
+    <!--<id column="rid" jdbcType="INTEGER" property="rid" />-->
+    <!--<result column="rname" jdbcType="VARCHAR" property="rname" />-->
+    <!--<association property="baseFunction" javaType="com.qhit.baseFunction.pojo.BaseFunction">-->
+      <!--<id property="fid" column="fid"></id>-->
+      <!--<result property="fname" column="fname"></result>-->
+    <!--</association>-->
+    <!--<association property="baseRoleFunction" javaType="com.qhit.baseRoleFunction.pojo.BaseRoleFunction">-->
+      <!--<id property="rmid" column="rmid"></id>-->
+      <!--<result property="fid" column="fid"></result>-->
+      <!--<result property="rid" column="rid"></result>-->
+    <!--</association>-->
+  <!--</resultMap>-->
+  <resultMap id="distribute" type="com.qhit.baseFunction.pojo.BaseFunction">
+    <id column="fid" jdbcType="INTEGER" property="fid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <association property="baseRoleFunction" javaType="com.qhit.baseRoleFunction.pojo.BaseRoleFunction">
+      <id property="rmid" column="rmid"></id>
+      <result property="fid" column="fid"></result>
+      <result property="rid" column="rid"></result>
+    </association>
+    <association property="baseRole" javaType="com.qhit.baseRole.pojo.BaseRole">
+      <id column="rid" jdbcType="INTEGER" property="rid" />
+      <result column="rname" jdbcType="VARCHAR" property="rname" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    rid, rname
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from base_role
+    where rid = #{rid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from base_role
+    where rid = #{rid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qhit.baseRole.pojo.BaseRole">
+    insert into base_role (rid, rname)
+    values (#{rid,jdbcType=INTEGER}, #{rname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qhit.baseRole.pojo.BaseRole">
+    insert into base_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rid != null">
+        rid,
+      </if>
+      <if test="rname != null">
+        rname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rid != null">
+        #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="rname != null">
+        #{rname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qhit.baseRole.pojo.BaseRole">
+    update base_role
+    <set>
+      <if test="rname != null">
+        rname = #{rname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where rid = #{rid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qhit.baseRole.pojo.BaseRole">
+    update base_role
+    set rname = #{rname,jdbcType=VARCHAR}
+    where rid = #{rid,jdbcType=INTEGER}
+  </update>
+  <select id="findAll" resultMap="BaseResultMap">
+
+    select *from base_role;
+  </select>
+
+  <select id="distributeLeft" resultMap="distribute" parameterType="com.qhit.baseRole.pojo.BaseRole">
+   SELECT  bf.name,bf.fid,bf.pid,bf.url  FROM  base_function bf  WHERE bf.fid NOT IN (SELECT brf.fid FROM  base_role  br , base_role_function brf WHERE  br.rid=brf.rid AND br.rid =#{rid,jdbcType=INTEGER})
+ORDER BY bf.pid ASC, bf.fid ASC
+  </select>
+  <select id="distributeRight" resultMap="distribute" parameterType="com.qhit.baseRole.pojo.BaseRole">
+    SELECT  bf.name,bf.fid,bf.pid,bf.url  FROM  base_function bf  WHERE bf.fid  IN (SELECT brf.fid FROM  base_role  br , base_role_function brf WHERE  br.rid=brf.rid AND br.rid =#{rid,jdbcType=INTEGER})
+ORDER BY bf.pid ASC, bf.fid ASC
+  </select>
+
+</mapper>

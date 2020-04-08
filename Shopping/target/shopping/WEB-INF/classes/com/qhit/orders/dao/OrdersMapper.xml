@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qhit.orders.dao.IOrdersDao">
+    <!-- 自定义结果集 -->
+    <resultMap id="BaseResultMap" type="com.qhit.orders.pojo.Orders">
+        <id property="oid" column="oid" javaType="java.lang.Integer"></id>
+        <result property="total" column="total" javaType="java.lang.Double"></result>
+        <result property="ordertime" column="ordertime" javaType="java.lang.String"></result>
+        <result property="state" column="state" javaType="java.lang.Integer"></result>
+        <result property="name" column="name" javaType="java.lang.String"></result>
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="addr" column="addr" javaType="java.lang.String"></result>
+        <result property="uid" column="uid" javaType="java.lang.Integer"></result>
+    </resultMap>
+    <resultMap id="orderAndUser" type="com.qhit.orders.pojo.Orders">
+        <result property="total" column="total"></result>
+        <result property="phone" column="phone"></result>
+        <result property="name" column="name"></result>
+        <result property="state" column="state"></result>
+        <result property="oid" column="oid"></result>
+        <result property="ordertime" column="ordertime"></result>
+        <result property="addr" column="addr"></result>
+        <association property="product" javaType="com.qhit.product.pojo.Product">
+            <result property="image" column="image"></result>
+            <result property="pname" column="pname"></result>
+            <result property="shopprice" column="shopprice"></result>
+        </association>
+        <association property="orderitem" javaType="com.qhit.orderitem.pojo.Orderitem">
+            <result property="subtotal" column="subtotal"></result>
+            <result property="count" column="count"></result>
+        </association>
+        <association property="user" javaType="com.qhit.user.pojo.User">
+            <result property="phone" column="phone"></result>
+            <result property="addr" column="addr"></result>
+            <result property="username" column="username"></result>
+        </association>
+    </resultMap>
+
+
+    <!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型，
+    resultType属性指明查询返回的结果集类型    -->
+
+    <sql id="Base_Column_List">
+		oid,total,ordertime,state,name,phone,addr,uid 
+	</sql>
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+        where oid = #{oid}
+    </select>
+    <delete id="delete" parameterType="java.lang.Integer">
+		delete from orders 
+		where oid = #{oid} 
+	</delete>
+    <insert id="insert" parameterType="com.qhit.orders.pojo.Orders">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="oid">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into orders(oid,total,ordertime,state,name,phone,addr,uid)
+        values (#{oid},#{total},#{ordertime},#{state},#{user.username},#{user.phone},#{user.addr},#{user.uid})
+    </insert>
+    <update id="updateSelective" parameterType="com.qhit.orders.pojo.Orders">
+        update orders
+        <set>
+            <if test="total != null and total!='' ">
+                total = #{total},
+            </if>
+            <if test="ordertime != null and ordertime!='' ">
+                ordertime = #{ordertime},
+            </if>
+            <if test="state != null and state!='' ">
+                state = #{state},
+            </if>
+            <if test="name != null and name!='' ">
+                name = #{name},
+            </if>
+            <if test="phone != null and phone!='' ">
+                phone = #{phone},
+            </if>
+            <if test="addr != null and addr!='' ">
+                addr = #{addr},
+            </if>
+            <if test="uid != null and uid!='' ">
+                uid = #{uid},
+            </if>
+        </set>
+        where oid = #{oid}
+    </update>
+    <update id="update" parameterType="com.qhit.orders.pojo.Orders">
+		update orders 
+		set  total = #{total}, ordertime = #{ordertime}, state = #{state}, name = #{name}, phone = #{phone}, addr = #{addr}, uid = #{uid} 
+		where oid = #{oid} 
+	</update>
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+    </select>
+    <select id="findByTotal" resultMap="BaseResultMap" parameterType="java.lang.Double">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+        where total = #{total}
+    </select>
+    <select id="findByOrdertime" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+        where ordertime = #{ordertime}
+    </select>
+    <select id="findByState" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+        where state = #{state}
+    </select>
+    <select id="findByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+        where name = #{name}
+    </select>
+    <select id="findByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+        where phone = #{phone}
+    </select>
+    <select id="findByAddr" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+        where addr = #{addr}
+    </select>
+    <select id="findByUid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+        where uid = #{uid}
+    </select>
+    <delete id="deleteBatch" parameterType="java.util.Arrays">
+        delete from orders where oid in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="search" parameterType="com.qhit.orders.pojo.Orders" resultMap="BaseResultMap">
+        select * from orders
+        <where>
+            <if test="total != null and total!='' ">
+                and total = #{total}
+            </if>
+            <if test="ordertime != null and ordertime!='' ">
+                and ordertime = #{ordertime}
+            </if>
+            <if test="state != null and state!='' ">
+                and state = #{state}
+            </if>
+            <if test="name != null and name!='' ">
+                and name = #{name}
+            </if>
+            <if test="phone != null and phone!='' ">
+                and phone = #{phone}
+            </if>
+            <if test="addr != null and addr!='' ">
+                and addr = #{addr}
+            </if>
+            <if test="uid != null and uid!='' ">
+                and uid = #{uid}
+            </if>
+        </where>
+    </select>
+    <select id="findOrderByoid" resultMap="orderAndUser">
+         SELECT o.oid,o.total,o.ordertime,o.state,o.addr,o.phone,o.name,
+			     ot.count,ot.subtotal,
+		         p.image,p.pname,p.shopprice
+		         FROM orders o,orderitem ot,product p
+		         WHERE ot.oid=o.oid
+
+		         AND
+		         ot.pid=p.pid
+		         AND
+		         o.oid=#{oids}
+
+    </select>
+    <select id="findOrderByUserId" resultMap="orderAndUser">
+  SELECT o.oid,o.total,o.ordertime,o.state,o.addr,o.phone,o.name,
+			     ot.count,ot.subtotal,
+		         p.image,p.pname,p.shopprice
+		         FROM orders o,user u ,orderitem ot,product p
+		         WHERE ot.oid=o.oid
+                  and
+		         o.uid=u.uid
+		         AND
+		         ot.pid=p.pid
+		         AND
+		         u.uid=#{userId}
+
+    </select>
+</mapper> 

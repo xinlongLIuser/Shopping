@@ -1,0 +1,213 @@
+.logo{
+    margin: 0px;
+    background-color: #d2dae9;
+    color: dimgrey;
+    font-size: 10px;
+}
+.top{
+    line-height: 32px;
+    padding-left: 1000px;
+    font-size: 15px;
+}
+.date{
+    display: inline-block;
+    width: 300px;
+    text-align: left;
+    margin-left: 50px;
+}
+.user{
+    display: inline-block;
+    width: 800px;
+    text-align: right;
+}
+.bottom{
+    text-align: center;
+    line-height: 43px;
+    background-color: #d2dae9;
+    color: dimgrey;
+    font-size: 10px;
+}
+.main{
+    text-align: center;
+    background-color: #FFFFE0;
+    color: dimgrey;
+    font-size: 14px;
+}
+.left{
+    background-color: #F5F5DC;
+    color: dimgrey;
+    font-size: 10px;
+}
+/** 列表**/
+
+.main table{
+    margin-top: 20px;
+    width: 90%;
+    border-radius: 5px;
+}
+.main table thead{
+    height: 30px;
+    line-height: 30px;
+    background-color: #CCEEFF;
+    font-weight: bold;
+    white-space: nowrap;
+
+}
+.main table{
+    text-align: center;
+    font-size: 12px;
+}
+.main tbody tr{
+    height: 30px;
+    background-color: #EEFFBB;
+}
+.main tbody tr:hover{
+    background-color: #99FF99;
+}
+
+/**添加页面 */
+.update .left{
+    margin-top: 10px;
+    display: inline-block;
+    width: 45%;
+    line-height: 30px;
+}
+.update .right{
+    margin-top: 10px;
+    display: inline-block;
+    width: 45%;
+    line-height: 30px;
+}
+.update .left span{
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+}
+.update .right span{
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+}
+.update input{
+    width: 200px;
+    height: 30px;
+    border-width: 1px;
+    border-radius: 3px;
+    padding-left: 2px;
+    background-color: #ece180;
+    color: #0b0602;
+}
+
+
+.update .buttons{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.update .buttons input[type='submit'],.update .buttons input[type='button']{
+    margin-left: 20px;
+    width: 80px;
+    height: 30px;
+    border-width: 0px;
+    border-radius: 5px;
+    background-color: #ecc75c;
+    color: white;
+}
+
+
+/**编辑页面 */
+.edit .editleft{
+    margin-top: 10px;
+    display: inline-block;
+    width: 45%;
+    line-height: 30px;
+
+}
+.edit .editright{
+    margin-top: 10px;
+    display: inline-block;
+    width: 45%;
+    line-height: 30px;
+}
+.edit .editleft span{
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+    background-color: #CCDDFF;
+}
+.edit .editright span{
+    display: inline-block;
+    width: 30%;
+    background-color: #CCDDFF;
+}
+.edit input{
+    width: 200px;
+    height: 30px;
+    border-width: 1px;
+    border-radius: 3px;
+}
+
+.edit .buttons{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.edit .buttons button{
+    margin-left: 20px;
+    width: 80px;
+    height: 30px;
+    border-width: 0px;
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(3,169,245);
+}
+
+/**分页样式 */
+/*.page span{*/
+    /*display: inline-block;*/
+    /*width: 40px;*/
+    /*height: 40px;*/
+    /*margin-left: 20px;*/
+    /*background-color: lightblue;*/
+    /*border-radius: 20px;*/
+    /*text-align: center;*/
+    /*line-height: 40px;*/
+    /*margin-top: 10px;*/
+/*}*/
+/*下拉框*/
+select{
+    width: 200px;
+    height: 30px;
+    border-width: 1px;
+    border-radius: 3px;
+}
+/*查询*/
+.search{
+    margin: 10px 100px;
+    text-align: left;
+}
+.search span{
+    width: 20%;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+.search span input{
+    width: 120px;
+    height: 30px;
+    border-width: 1px;
+    border-radius: 3px;
+    margin-left: 10px;
+}
+
+.search span button{
+    margin-left: 30px;
+    text-align: center;
+    width: 80px;
+    height: 30px;
+    border-width: 0px;
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(3,169,245);
+}
+
+

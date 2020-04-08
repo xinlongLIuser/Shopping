@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.category.dao.ICategoryDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.category.pojo.Category"> 
+		<id property="cid" column="cid" javaType="java.lang.Integer"></id> 
+		<result property="cname" column="cname" javaType="java.lang.String"></result> 
+	</resultMap>
+	<resultMap id="AllCategoryMaps" type="com.qhit.category.pojo.Category">
+		<id property="cid" column="cid" javaType="java.lang.Integer"></id>
+		<result property="cname" column="cname" javaType="java.lang.String"></result>
+		<collection property="categorySecond" ofType="com.qhit.categorysecond.pojo.Categorysecond">
+			<id column="csid" property="csid" javaType="java.lang.Integer"/>
+			<result property="cid" column="cid"></result>
+			<result property="csname" column="csname" javaType="java.lang.String"></result>
+		</collection>
+	</resultMap>
+ 
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		cid,cname 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from category 
+		where cid = #{cid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from category 
+		where cid = #{cid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.category.pojo.Category" > 
+		insert into category(cname) 
+		values (#{cname}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.category.pojo.Category" > 
+		update category 
+		<set > 
+			<if test="cname != null and cname!='' " > 
+				cname = #{cname}, 
+			</if> 
+		</set> 
+		where cid = #{cid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.category.pojo.Category" > 
+		update category 
+		set  cname = #{cname} 
+		where cid = #{cid} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from category 
+	</select> 
+	<select id="findByCname" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from category 
+		where cname = #{cname} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from category where cid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.category.pojo.Category" resultMap="BaseResultMap"> 
+		select * from  category 
+		<where > 
+			<if test="cname != null and cname!='' " > 
+				 and cname = #{cname} 
+			</if> 
+		</where> 
+	</select>
+	<select id="findAllCategory" resultMap="AllCategoryMaps">
+		SELECT c.cid ,c.cname,cs.csid,cs.csname FROM
+		category c left join categorysecond  cs
+on c.cid=cs.cid
+	</select>
+</mapper> 
